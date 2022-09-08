@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: center;
+        border: 1px solid black;
+        padding: 10px 20px;
+      }
+      .count {
+        padding: 0 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="../lib/react.js"></script>
+    <script src="../lib/react-dom.js"></script>
+    <script src="../lib/babel.js"></script>
+    <script src="./data.js"></script>
+    <script type="text/babel">
+      class App extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            books: books,
+          };
+        }
+        getTotalPrice() {
+          return this.state.books.reduce((a, b) => a + b.price * b.count, 0);
+        }
+        formatPrice(num) {
+          return "¥ " + num.toFixed(2);
+        }
+        add(index) {
+          const newBooks = [...this.state.books];
+          newBooks[index].count++;
+          this.setState({
+            books: newBooks,
+          });
+        }
+        sub(index) {
+          const newBooks = [...this.state.books];
+          newBooks[index].count--;
+          this.setState({
+            books: newBooks,
+          });
+        }
+        changeCount(index, step) {
+          const newBooks = [...this.state.books];
+          newBooks[index].count += step;
+          this.setState({
+            books: newBooks,
+          });
+        }
+        removeBook(index) {
+          const newBooks = [...this.state.books];
+          newBooks.splice(index, 1);
+          this.setState({
+            books: newBooks,
+          });
+        }
+        render() {
+          return (
+            <div>
+              {this.state.books.length === 0 ? (
+                <h2>购物车为空！！！</h2>
+              ) : (
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>序号</th>
+                        <th>书籍名称</th>
+                        <th>出版日期</th>
+                        <th>价格</th>
+                        <th>购买数量</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.books.map((item, index) => (
+                        <tr key={item.id}>
+                          <td>{item.id}</td>
+                          <td>{item.name}</td>
+                          <td>{item.date}</td>
+                          <td>{this.formatPrice(item.price)}</td>
+                          <td>
+                            <button
+                              onClick={() => this.changeCount(index, -1)}
+                              disabled={item.count <= 1}
+                            >
+                              -
+                            </button>
+                            <span className="count">{item.count}</span>
+                            <button onClick={() => this.changeCount(index, 1)}>
+                              +
+                            </button>
+                          </td>
+                          <td>
+                            <button onClick={() => this.removeBook(index)}>
+                              移除
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <h2>
+                    总价格
+                    {this.formatPrice(this.getTotalPrice())}
+                  </h2>
+                </div>
+              )}
+            </div>
+          );
+        }
+      }
+      const root = ReactDOM.createRoot(document.querySelector("#root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
