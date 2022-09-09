@@ -1,0 +1,13 @@
+.tab-control {
+  width: 300px;
+}
+.tab-control span {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+}
+
+.tab-control .active{
+  color: red;
+  text-decoration: underline;
+}
